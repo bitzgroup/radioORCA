@@ -1,0 +1,51 @@
+name: radioORCA
+options:
+  bundleIdPrefix: com.bitzgroup
+  deploymentTarget:
+    macOS: "13.0"
+  # Base language is English; Japanese is provided as a localization
+  # (Localizable.xcstrings + ja.lproj/InfoPlist.strings).
+  developmentLanguage: en
+
+packages:
+  RadioSharkKit:
+    path: RadioSharkKit
+
+targets:
+  radioORCA:
+    type: application
+    platform: macOS
+    sources:
+      - path: App/radioORCA
+    dependencies:
+      - package: RadioSharkKit
+        product: RadioSharkKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bitzgroup.radioORCA
+        PRODUCT_NAME: radioORCA
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        # Mic-access permission text, needed once audio capture (Phase 2) is
+        # implemented; radioSHARK exposes itself as a standard USB audio input.
+        # Base value here is English; the Japanese translation lives in
+        # App/radioORCA/ja.lproj/InfoPlist.strings.
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "radioORCA needs microphone (USB audio) access to play and record audio from radioSHARK."
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+        # 意図的にApp Sandboxのentitlementを付与していない(= 非サンドボックス)。
+        # docs/implementation-plan.md の配布方針(Developer ID署名 + notarize、
+        # GitHub Releasesでの直接配布)を参照。
+
+schemes:
+  radioORCA:
+    build:
+      targets:
+        radioORCA: all
+    run:
+      config: Debug
+    test:
+      config: Debug

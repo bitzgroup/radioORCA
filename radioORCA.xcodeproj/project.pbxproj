@@ -1,0 +1,363 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		183F7E7B07CDB3809C37EB98 /* radioORCAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE49B2BB015428B3DE09876 /* radioORCAApp.swift */; };
+		2755D8DF22BFA60C11EB20B2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 73FEF95BC64B1A12BEFB1BF3 /* Localizable.xcstrings */; };
+		3DB2B8B7F3360FA8AED03CB2 /* RadioSharkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0F435A73AD0DA5BAD87D84 /* RadioSharkKit */; };
+		438F6DF98F1AD25109D31BDF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE69F5AFCF5CAEE454254AB6 /* ContentView.swift */; };
+		D3C030562493AFCE6D7C453A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 88BBCFC67DB380DBF94F15AE /* InfoPlist.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		73FEF95BC64B1A12BEFB1BF3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		85ECBF07B4B7344D782EDA1E /* RadioSharkKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RadioSharkKit; path = RadioSharkKit; sourceTree = SOURCE_ROOT; };
+		88BBCFC67DB380DBF94F15AE /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B9A92C780009F9C255C944CB /* radioORCA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = radioORCA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE69F5AFCF5CAEE454254AB6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		ECE49B2BB015428B3DE09876 /* radioORCAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = radioORCAApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		771B480C13AB05A064CA68D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DB2B8B7F3360FA8AED03CB2 /* RadioSharkKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		46A30265CF99D84104F5F96B = {
+			isa = PBXGroup;
+			children = (
+				FF56E8F3A6410A4A1F912EB8 /* Packages */,
+				DE84E21A805F8FE86FB15316 /* radioORCA */,
+				B2062D4C4F14D7B56012790A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B2062D4C4F14D7B56012790A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B9A92C780009F9C255C944CB /* radioORCA.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DE84E21A805F8FE86FB15316 /* radioORCA */ = {
+			isa = PBXGroup;
+			children = (
+				DE69F5AFCF5CAEE454254AB6 /* ContentView.swift */,
+				88BBCFC67DB380DBF94F15AE /* InfoPlist.strings */,
+				73FEF95BC64B1A12BEFB1BF3 /* Localizable.xcstrings */,
+				ECE49B2BB015428B3DE09876 /* radioORCAApp.swift */,
+			);
+			name = radioORCA;
+			path = App/radioORCA;
+			sourceTree = "<group>";
+		};
+		FF56E8F3A6410A4A1F912EB8 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				85ECBF07B4B7344D782EDA1E /* RadioSharkKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		15C03CD6F3FF3A6D40E246E4 /* radioORCA */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E609EC9BF85F17CADB797BD1 /* Build configuration list for PBXNativeTarget "radioORCA" */;
+			buildPhases = (
+				3EC75B9FD82A71245F46860E /* Sources */,
+				AC9A5CB91E693DE085E5159E /* Resources */,
+				771B480C13AB05A064CA68D9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = radioORCA;
+			packageProductDependencies = (
+				4F0F435A73AD0DA5BAD87D84 /* RadioSharkKit */,
+			);
+			productName = radioORCA;
+			productReference = B9A92C780009F9C255C944CB /* radioORCA.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9F8F3A22AD74E522DC42406C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					15C03CD6F3FF3A6D40E246E4 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CF911339A2261216A2ECE6F7 /* Build configuration list for PBXProject "radioORCA" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				ja,
+			);
+			mainGroup = 46A30265CF99D84104F5F96B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				45234C75CBA91A3A64F713A3 /* XCLocalSwiftPackageReference "RadioSharkKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B2062D4C4F14D7B56012790A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				15C03CD6F3FF3A6D40E246E4 /* radioORCA */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AC9A5CB91E693DE085E5159E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3C030562493AFCE6D7C453A /* InfoPlist.strings in Resources */,
+				2755D8DF22BFA60C11EB20B2 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3EC75B9FD82A71245F46860E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				438F6DF98F1AD25109D31BDF /* ContentView.swift in Sources */,
+				183F7E7B07CDB3809C37EB98 /* radioORCAApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4582D6A60BB39BED1B662BF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		ACF1793EAEDC3A869D251865 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B764C572F18040DD480F68CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "radioORCA needs microphone (USB audio) access to play and record audio from radioSHARK.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitzgroup.radioORCA;
+				PRODUCT_NAME = radioORCA;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E158B0703E7C7C53893BD324 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "radioORCA needs microphone (USB audio) access to play and record audio from radioSHARK.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitzgroup.radioORCA;
+				PRODUCT_NAME = radioORCA;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CF911339A2261216A2ECE6F7 /* Build configuration list for PBXProject "radioORCA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACF1793EAEDC3A869D251865 /* Debug */,
+				4582D6A60BB39BED1B662BF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E609EC9BF85F17CADB797BD1 /* Build configuration list for PBXNativeTarget "radioORCA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E158B0703E7C7C53893BD324 /* Debug */,
+				B764C572F18040DD480F68CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		45234C75CBA91A3A64F713A3 /* XCLocalSwiftPackageReference "RadioSharkKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = RadioSharkKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4F0F435A73AD0DA5BAD87D84 /* RadioSharkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RadioSharkKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 9F8F3A22AD74E522DC42406C /* Project object */;
+}

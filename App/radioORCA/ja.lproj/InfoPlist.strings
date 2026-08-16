@@ -1,0 +1,2 @@
+/* Japanese localization of Info.plist keys. Base (English) values live in project.yml. */
+"NSMicrophoneUsageDescription" = "radioSHARKからのラジオ音声を録音・再生するためにマイク入力(USBオーディオ)へのアクセスが必要です。";

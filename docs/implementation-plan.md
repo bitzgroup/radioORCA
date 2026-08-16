@@ -16,6 +16,7 @@
 | デバイス制御API | **`IOHIDManager`**（現行の高レベルHID API）を採用。`rslight`/`radiosh` が使う古い `IOCFPlugIn` / `IOHIDDeviceInterface**` 方式は参照しない（プロトコル仕様＝バイト列の知識のみ流用） |
 | テスト | Swift Testing（XCTestではなく新フレームワーク）を第一候補とする |
 | 対応macOS | 最新2〜3世代を目安（要決定。下記「未決事項」参照） |
+| 言語（コード内文字列） | **英語をベース言語**とし、日本語はXcodeの String Catalog（`Localizable.xcstrings`）でローカライズ提供する。`docs/`配下のドキュメントは引き続き日本語（別の話） |
 
 ## アーキテクチャ概要
 
@@ -49,22 +50,32 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 
 ## フェーズ
 
-### Phase 0. 実機検証・環境構築（着手前の土台作り）
-- [ ] 実機がmacOSから認識されることを確認（`ioreg` / `system_profiler SPUSBDataType` /
-      `hidutil list` でVendor ID `0x077D` を確認）。**現状：未検出、実機の物理接続を要再確認**
-      （ハブ経由ではなく本体ポート直結を推奨。詳細は本ドキュメント末尾「検証ログ」参照）
-- [ ] Vendor/Product/Version値を実機の値で最終確認
-- [ ] **新規Xcodeプロジェクトを作成**（既存 `radioORCA` プロトタイプは参照しない）。
-      アプリターゲット＋ローカルSPMパッケージ `RadioSharkKit` の構成にする
-- [ ] Entitlementsは非サンドボックス構成（`app-sandbox`キーを付与しない）
-- [ ] `docs/hardware-protocol.md` §10「未確定事項」のうち①②④を実機で検証
+### Phase 0. 実機検証・環境構築（着手前の土台作り） — ✅ 完了（2026-08-16）
+- [x] 実機がmacOSから認識されることを確認（`ioreg` / `hidutil list` でVendor ID
+      `0x077D` を確認）。詳細は本ドキュメント末尾「検証ログ」参照
+- [x] Vendor/Product/Version値を実機の値で最終確認（`idVendor=1917`,
+      `idProduct=25210`, `bcdDevice=16` = v2）
+- [x] **新規Xcodeプロジェクトを作成**（既存 `radioORCA` プロトタイプは参照していない）。
+      `xcodegen`（`project.yml`）でアプリターゲット `radioORCA` を生成し、
+      ローカルSPMパッケージ `RadioSharkKit` を依存として追加
+- [x] Entitlementsは非サンドボックス構成（`app-sandbox`キーは付与していない。
+      `project.yml` にコメントで明記）
+- [x] `docs/hardware-protocol.md` §10「未確定事項」のうち②③④を実機で検証済み
+      （①青色LED Pulse、⑤複数台接続は引き続き未検証）
 
-### Phase 1. RadioSharkKit：デバイス制御コア
-- [ ] `DeviceDiscovery`：v2デバイスのマッチング辞書生成、接続/切断通知（`IOServiceAddMatchingNotification`）
-- [ ] `HIDController`：open/close、`setBlueLight` / `setRedLight` / `setTuning` の実装
-- [ ] `FrequencyCodec`：FM/AMのエンコード関数＋**単体テスト**（マニュアル記載の周波数レンジ境界値を含む）
-- [ ] 手動テスト用の最小CLI（`swift run radiosh-cli -f 80.0` 等）でLED点灯・選局が実機で動くことを確認
-  → ここまでで「コマンドラインで制御できる」state（ユーザーの既知の到達点）に**Swift版として追いつく**
+### Phase 1. RadioSharkKit：デバイス制御コア — ✅ 主要部分完了（2026-08-16）
+- [x] `DeviceDiscovery`：v2デバイスのマッチング辞書生成、接続/切断通知
+      （`IOHIDManagerRegisterDeviceMatchingCallback`/`...RemovalCallback`を使用。
+      当初案の`IOServiceAddMatchingNotification`ではなく`IOHIDManager`の
+      コールバックAPIに統一）
+- [x] `HIDController`：`IOHIDManager`ベースでopen/close、`setBlueLight` /
+      `setRedLight` / `tuneFM` / `tuneAM` を実装
+- [x] `FrequencyCodec` / `HIDReports`：FM/AMのエンコード関数＋**単体テスト**
+      （Swift Testing、6テスト全通過）
+- [x] 手動テスト用の最小CLI `radiosh-cli`（`swift run radiosh-cli -f 80.0 -b 100` 等）で
+      実機のLED点灯・選局が動作することを確認
+  → **「コマンドラインで制御できる」state（ユーザーの既知の到達点）にSwift版として到達（M1達成）**
+- [ ] `DeviceDiscovery`をアプリ本体（SwiftUI）に組み込んで接続/切断UIに反映（Phase 3で対応）
 
 ### Phase 2. オーディオ（ライブ再生・録音・タイムシフト）
 - [ ] `AVAudioEngine` でradioSHARKのUSBオーディオ入力デバイスを選択し、
@@ -118,7 +129,7 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 
 | マイルストーン | 内容 |
 |---|---|
-| M1 | Phase 0-1完了：SwiftでLED点灯・選局がCLIから実機動作 |
+| M1 | ✅ **達成（2026-08-16）** Phase 0-1完了：SwiftでLED点灯・選局がCLIから実機動作 |
 | M2 | Phase 2完了：ライブ再生・録音・タイムシフトが動作 |
 | M3 | Phase 3完了：**MVPとして初回β公開（GitHub Releases）** |
 | M4 | Phase 4-5完了：スケジュール録音・EQ・設定画面が揃う |
@@ -162,3 +173,38 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 **教訓**：1回目に未検出だったのは、USB 1.1 Full Speedの旧機種特有の
 ハブ相性 or 列挙タイミングの問題と思われる。**Phase 0では実機接続を
 Mac本体ポート直結でまず試す**運用を前提にする。
+
+### 2026-08-16：Phase 0-1 実装・実機動作確認（成功）
+
+`xcodegen`（`project.yml`）でXcodeプロジェクト `radioORCA.xcodeproj` を新規生成し、
+`RadioSharkKit` ローカルSPMパッケージを実装。以下を実施・確認した。
+
+- `swift build` / `swift test`（Swift Testing、6テスト）が通過
+- 実機接続状態で `swift run radiosh-cli -b 40` / `-b 0` / `-f 80.0 -b 100` を実行し、
+  **`IOHIDManager`経由でのHIDレポート送信が実機で成功**（青色LEDの明るさ変化・消灯、
+  FM選局コマンドの送信をコマンドラインから実施）
+- `xcodebuild -project radioORCA.xcodeproj -scheme radioORCA build` が成功、
+  生成された `radioORCA.app` の起動・終了も確認
+- 開発ビルドはアドホック署名（`Sign to Run Locally`）のため
+  「Disabling hardened runtime with ad-hoc codesigning」の注記が出る。
+  Developer ID署名＋Hardened Runtime＋notarizeはPhase 6で対応
+
+これにより **M1（SwiftでLED点灯・選局がCLIから実機動作）を達成**。
+
+### 2026-08-16：LED点灯が視認できない問題の切り分け（解決）
+
+ユーザーによる目視確認で「消灯は見えるが、点灯（明るさ変化）が確認できない」
+という報告があり、ハードウェア故障の懸念が挙がった。切り分けのため
+`radiosh-cli` に診断用の `-w <秒>` オプション（HID接続を閉じずに指定秒数
+待機してから終了）を追加し、`radiosh-cli -b 127 -w 8` を実行したところ、
+**8秒間はっきり点灯し続け、プロセス終了後も消灯しない**ことを実機で確認した。
+
+**原因**：それまでのCLI実行は「接続→レポート送信→即プロセス終了
+（`HIDController.deinit`で`IOHIDManagerClose`）」を毎回繰り返しており、
+点灯コマンドの効果がごく短時間しか目視できていなかった（一瞬の変化として
+しか見えなかった）。ハードウェア側は正常で、**一度送信したLED状態は
+ホスト接続の有無に関わらず保持される**ことも合わせて判明した
+（`hardware-protocol.md` に追記予定）。
+
+これにより点灯・消灯コマンドの実装が完全に正しいことを実機で再確認できた。
+`-w`オプションは診断用として`radiosh-cli`に残してある。
