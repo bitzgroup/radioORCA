@@ -1,3 +1,10 @@
+# macOS
+.DS_Store
+
+# scripts/release.sh output (archive/export/dmg) — never commit build
+# artifacts, and the dmg itself is attached to the GitHub Release instead.
+/build/
+
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore

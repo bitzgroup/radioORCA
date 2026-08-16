@@ -209,6 +209,37 @@ public final class AudioEngineController: @unchecked Sendable {
         withStateLock { transport?.mode ?? .live } == .live
     }
 
+    /// A snapshot of timeshift transport state, for driving the app's
+    /// Playback Indicator (`docs/app-feature-spec.md` §1.3: "LIVE" or a
+    /// timecode showing how far behind live the current scrub position is).
+    public struct TimeshiftStatus: Equatable, Sendable {
+        public let mode: TimeshiftPlaybackController.Mode
+        /// How many seconds behind the live edge `currentFrame` currently
+        /// is. `0` while live.
+        public let secondsBehindLive: Double
+    }
+
+    public var timeshiftStatus: TimeshiftStatus? {
+        withStateLock {
+            guard let transport else { return nil }
+            let behindFrames = max(0, transport.liveFrame - transport.currentFrame)
+            return TimeshiftStatus(
+                mode: transport.mode,
+                secondsBehindLive: Double(behindFrames) / transport.sampleRate
+            )
+        }
+    }
+
+    /// Playback volume (0...1) for both live monitoring and timeshift
+    /// snippets — both play through `playbackEngine`'s shared mixer, so
+    /// this single knob covers `docs/app-feature-spec.md` §1.2's Volume
+    /// Slider. Mute is left to the caller (e.g. remember the previous
+    /// value and set `0`); this type doesn't track a separate mute flag.
+    public var volume: Float {
+        get { playbackEngine.mainMixerNode.outputVolume }
+        set { playbackEngine.mainMixerNode.outputVolume = newValue }
+    }
+
     // MARK: - Private: locking helpers
 
     private func withStateLock<T>(_ body: () -> T) -> T {

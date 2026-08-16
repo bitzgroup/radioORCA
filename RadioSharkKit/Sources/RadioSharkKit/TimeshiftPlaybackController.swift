@@ -19,7 +19,7 @@
 /// a deliberately simple "scrub" behavior; revisit if product feedback
 /// wants tape-style continuous sped-up audio instead.
 public struct TimeshiftPlaybackController {
-    public enum Mode: Equatable {
+    public enum Mode: Equatable, Sendable {
         case live
         case paused
         case seekingBack(rateIndex: Int)

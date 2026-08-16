@@ -18,9 +18,9 @@ swift build
 swift test                       # Swift Testingで実行
 
 # 実機に対する手動動作確認（radioSHARK 2が接続されている前提）
-swift run radiosh-cli -b 40      # 青色LED輝度40
-swift run radiosh-cli -f 80.0    # FM 80.0MHzにチューニング
-swift run radiosh-cli -h         # 使い方
+swift run radioorca-cli -b 40      # 青色LED輝度40
+swift run radioorca-cli -f 80.0    # FM 80.0MHzにチューニング
+swift run radioorca-cli -h         # 使い方
 
 # アプリ本体（radioORCA.xcodeproj）
 # project.ymlを編集したら再生成すること
@@ -87,7 +87,7 @@ xcodebuild -project radioORCA.xcodeproj -scheme radioORCA build
     純粋関数でテストしやすい）、`HIDController`（`IOHIDManager`ラッパー、
     実際にopen/setReportする）、`DeviceDiscovery`（接続/切断監視、まだ
     アプリ本体には未接続）。
-  - `Sources/radiosh-cli/` — 実機での手動確認用CLI実行ファイル。
+  - `Sources/radioorca-cli/` — 実機での手動確認用CLI実行ファイル。
   - `Tests/RadioSharkKitTests/` — Swift Testingによるユニットテスト
     （`FrequencyCodec`/`HIDReports`の純粋関数のみを対象。実機は不要）。
 - `App/radioORCA/` — SwiftUIアプリのソース（`radioORCAApp.swift`,
