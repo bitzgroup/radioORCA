@@ -105,6 +105,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					15C03CD6F3FF3A6D40E246E4 = {
+						DevelopmentTeam = XKY95WKF3J;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -283,6 +284,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XKY95WKF3J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -292,7 +294,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitzgroup.radioORCA;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.bitz.radioORCA;
 				PRODUCT_NAME = radioORCA;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;
@@ -306,6 +308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XKY95WKF3J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -315,7 +318,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitzgroup.radioORCA;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.bitz.radioORCA;
 				PRODUCT_NAME = radioORCA;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;

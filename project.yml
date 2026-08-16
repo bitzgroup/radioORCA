@@ -1,6 +1,6 @@
 name: radioORCA
 options:
-  bundleIdPrefix: com.bitzgroup
+  bundleIdPrefix: jp.co.bitz
   deploymentTarget:
     macOS: "13.0"
   # Base language is English; Japanese is provided as a localization
@@ -22,7 +22,7 @@ targets:
         product: RadioSharkKit
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.bitzgroup.radioORCA
+        PRODUCT_BUNDLE_IDENTIFIER: jp.co.bitz.radioORCA
         PRODUCT_NAME: radioORCA
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
@@ -36,6 +36,7 @@ targets:
         INFOPLIST_KEY_NSMicrophoneUsageDescription: "radioORCA needs microphone (USB audio) access to play and record audio from radioSHARK."
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: XKY95WKF3J
         # 意図的にApp Sandboxのentitlementを付与していない(= 非サンドボックス)。
         # docs/implementation-plan.md の配布方針(Developer ID署名 + notarize、
         # GitHub Releasesでの直接配布)を参照。
