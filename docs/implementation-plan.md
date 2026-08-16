@@ -18,6 +18,7 @@
 | テスト | Swift Testing（XCTestではなく新フレームワーク）を第一候補とする |
 | 対応macOS | 最新2〜3世代を目安（要決定。下記「未決事項」参照） |
 | 言語（コード内文字列） | **英語をベース言語**とし、日本語はXcodeの String Catalog（`Localizable.xcstrings`）でローカライズ提供する。`docs/`配下のドキュメントは引き続き日本語（別の話） |
+| CI | **GitHub Actions**（`.github/workflows/ci.yml`）で`push`/PR時に`RadioSharkKit`の`swift build`/`swift test`とアプリ本体の`xcodebuild build`（署名なし）を実行。パブリックリポジトリなので参考実装は`bitzgroup/GameplayKit`の`ci.yml`（2026-08-16決定）。**リリースビルド（署名・公証・dmg化・GitHub Releaseへの添付）はCIでは行わずローカルで実施**（署名鍵をCIに置かない方針。詳細はPhase 6参照） |
 
 ## アーキテクチャ概要
 
@@ -134,7 +135,11 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 ### Phase 6. 配布パイプライン
 - [ ] Developer ID証明書取得、コード署名スクリプト
 - [ ] `notarytool` による公証＋ステープル自動化
-- [ ] GitHub Actions：タグpushで dmg をビルド → 署名 → 公証 → GitHub Releaseに添付
+- [ ] リリースビルド（署名・公証・dmg化・GitHub Releaseへの添付）は
+      **ローカル（開発機）で実施する方針**（2026-08-16決定）。CI（GitHub
+      Actions）はビルド・テストの検証のみに用い、署名鍵をCIに置かない
+      （`.github/workflows/ci.yml`参照）。ローカルでの手順をスクリプト化
+      する（`gh release create`でdmgを添付するところまで含む）
 - [ ] リリースノート運用ルールの整備
 - [ ] README整備：インストール手順、対応ハードウェア（v2のみである旨）、出典クレジット
 
