@@ -28,6 +28,11 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
+        # App/radioORCA/Assets.xcassets/AppIcon.appiconset。オリジナルデザイン
+        # （オルカのシルエット）。SVGソースは App/radioORCA/Resources/AppIcon.svg。
+        # Griffin純正アプリの意匠は参照・複製していない
+        # （docs/app-feature-spec.md §0参照）。
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         # Mic-access permission text, needed once audio capture (Phase 2) is
         # implemented; radioSHARK exposes itself as a standard USB audio input.
@@ -40,6 +45,16 @@ targets:
         # 意図的にApp Sandboxのentitlementを付与していない(= 非サンドボックス)。
         # docs/implementation-plan.md の配布方針(Developer ID署名 + notarize、
         # GitHub Releasesでの直接配布)を参照。
+    entitlements:
+      path: App/radioORCA/radioORCA.entitlements
+      properties:
+        # Hardened Runtime(上記ENABLE_HARDENED_RUNTIME)はApp Sandboxとは別に、
+        # マイク(オーディオ入力)アクセスにこのエンタイトルメントを要求する。
+        # 無いとTCCはダイアログも出さず黙ってkTCCServiceMicrophoneを拒否する
+        # (2026-08-16、実機で無音の原因として特定。tccdログの
+        # "Prompting policy for hardened runtime; ... requires entitlement
+        # com.apple.security.device.audio-input but it is missing" で確認)。
+        com.apple.security.device.audio-input: true
 
 schemes:
   radioORCA:

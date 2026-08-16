@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1478A8"/>
+      <stop offset="100%" stop-color="#1FA6B8"/>
+    </linearGradient>
+    <clipPath id="bodyClip">
+      <ellipse cx="512" cy="540" rx="300" ry="150" transform="rotate(-8 512 540)"/>
+    </clipPath>
+  </defs>
+
+  <rect x="12" y="12" width="1000" height="1000" rx="224" ry="224" fill="url(#bg)"/>
+
+  <!-- radio waves: concentric arcs around a source dot, like a classic
+       broadcast/Wi-Fi glyph, so it reads unambiguously as "signal" -->
+  <g stroke="#FFFFFF" stroke-linecap="round" fill="none" opacity="0.8">
+    <path d="M 700 220 A 70 70 0 0 1 770 290" stroke-width="20"/>
+    <path d="M 700 165 A 125 125 0 0 1 825 290" stroke-width="20"/>
+    <path d="M 700 110 A 180 180 0 0 1 880 290" stroke-width="20"/>
+  </g>
+  <circle cx="700" cy="290" r="13" fill="#FFFFFF"/>
+
+  <!-- tail flukes, attached at the ellipse's rear tip -->
+  <path fill="#14171B" d="
+    M 226 500
+    C 170 470, 110 448, 70 442
+    C 112 472, 150 495, 178 512
+    C 150 528, 112 552, 70 584
+    C 110 576, 170 552, 224 520
+    Z"/>
+
+  <!-- body: clean ellipse (guarantees a smooth, correct silhouette) -->
+  <ellipse cx="512" cy="540" rx="300" ry="150" transform="rotate(-8 512 540)" fill="#14171B"/>
+
+  <!-- white belly: an offset ellipse clipped to the body, giving a clean
+       curved black/white boundary like real orca countershading -->
+  <g clip-path="url(#bodyClip)">
+    <ellipse cx="560" cy="660" rx="290" ry="160" fill="#F7FBFC"/>
+  </g>
+
+  <!-- dorsal fin: wide base, gently swept back, rounded tip -->
+  <path fill="#14171B" d="
+    M 646 412
+    C 630 352, 604 292, 574 250
+    C 564 236, 546 236, 538 252
+    C 528 296, 532 348, 522 390
+    C 508 404, 488 414, 464 420
+    C 518 438, 590 436, 646 412
+    Z"/>
+
+  <!-- white eye patch -->
+  <ellipse cx="742" cy="470" rx="28" ry="13" fill="#F7FBFC" transform="rotate(-18 742 470)"/>
+</svg>

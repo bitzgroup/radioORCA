@@ -74,10 +74,11 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
       `setRedLight` / `tuneFM` / `tuneAM` を実装
 - [x] `FrequencyCodec` / `HIDReports`：FM/AMのエンコード関数＋**単体テスト**
       （Swift Testing、6テスト全通過）
-- [x] 手動テスト用の最小CLI `radiosh-cli`（`swift run radiosh-cli -f 80.0 -b 100` 等）で
+- [x] 手動テスト用の最小CLI `radioorca-cli`（`swift run radioorca-cli -f 80.0 -b 100` 等）で
       実機のLED点灯・選局が動作することを確認
   → **「コマンドラインで制御できる」state（ユーザーの既知の到達点）にSwift版として到達（M1達成）**
-- [ ] `DeviceDiscovery`をアプリ本体（SwiftUI）に組み込んで接続/切断UIに反映（Phase 3で対応）
+- [x] `DeviceDiscovery`をアプリ本体（SwiftUI）に組み込んで接続/切断UIに反映
+      （Phase 3、`RadioViewModel.start()`。詳細はPhase 3の項を参照）
 
 ### Phase 2. オーディオ（ライブ再生・録音・タイムシフト） — ✅ コア実装・実機検証完了（2026-08-16）
 - [x] `AVAudioEngine` でradioSHARKのUSBオーディオ入力デバイスを選択し、
@@ -107,17 +108,72 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 - [x] デバイス未接続時／切断時のハンドリング：`AudioEngineController`が
       `connectionState`/`onConnectionStateChange`を公開し、
       `observe(_:DeviceDiscovery)`で接続/切断に連動して自動start/stopできる
-      ようにした。**UI上の表示（USBアイコン点滅相当）はPhase 3で対応**
+      ようにした。**UI上の表示（グレー/青/赤のFinインジケーター）はPhase 3で
+      対応済み**（`FinIndicatorView`。ただし「デバイス未検出時のUSBアイコン
+      点滅」相当の専用表示は実装しておらず、`.disconnected`と同じグレー
+      表示に統合している。詳細はPhase 3の項のコメントを参照）
       （`DeviceDiscovery`のアプリ本体への組み込み自体もPhase 3待ち。
       Phase 1の未了項目と合流）
 
-### Phase 3. メインUI（MVP機能）
-- [ ] チューニングUI：Up/Down、AM/FM切替、スライダー、直接周波数入力、Tabシーク
-- [ ] 再生コントロール：Volume、Mute、Record、Play/Pause、Live
-- [ ] お気に入り（Favorites）＋プリセットキー（⌘+1〜9）
-- [ ] Fin接続ステータス表示（グレー/青/赤）とLED実機連動
-- [ ] `docs/app-feature-spec.md` §7 のショートカットキー一式を実装
-- [ ] **この時点でMVPとして初回リリース候補**（β）
+### Phase 3. メインUI（MVP機能） — 主要部分実装・実機検証済み（2026-08-16）
+- [x] チューニングUI：Up/Down、AM/FM切替、スライダー、直接周波数入力を実装
+      （`TuningView`）。地域（Standard/Japan）でFM範囲・刻み幅とAM刻み幅
+      （9/10kHz）が変わる`TuningRegion`を追加し、システムのロケールから
+      既定値を判定（Phase 5で正式なPreferences UIに置き換え予定）。
+      バンド切替時は各バンドの最後の周波数を記憶し（`RadioViewModel`の
+      `savedFrequencies`）、`UserDefaults`に永続化してアプリ再起動後も
+      復元する（`persistTuningState`/`restoreTuningState`。ユーザー
+      フィードバック「設定した周波数を覚える機能が無いと使いづらい」に対応）。
+      実機でFM 85.1MHz・AM 594kHzへのチューニングを確認済み。Tabキーでの
+      「シーク」は、ハードウェアに信号強度を返す
+      入力レポートが存在しない（`hardware-protocol.md`に記載なし）ため
+      Tune Up/Downと同じ挙動の仮実装（`seekUp`/`seekDown`）
+- [x] 再生コントロール：Volume、Mute、Record、Play/Pause、Liveを実装
+      （`PlaybackControlsView`）。**実機でFM 85.1MHzのライブ再生（放送音声）
+      とAM 594kHzのライブ再生（ノイズ、アンテナ未延長のため局は未受信）を
+      確認済み**。Recordボタンで赤色LED点灯は確認したが、エンタイトルメント
+      修正後の録音ファイルの中身（実際に音声が録れているか）は未確認
+      （次回実機確認時に要再検証）
+- [x] お気に入り（Favorites）＋プリセットキー（⌘+1〜9）を実装
+      （`FavoritesView`、`FavoritesStore`はUserDefaults永続化）。
+      実機での一連の操作確認は未実施
+- [x] Fin接続ステータス表示（グレー/青/赤）とLED実機連動を実装。
+      実機で接続時の青色LED点灯、録音時の赤色LED点灯を確認済み
+- [x] `docs/app-feature-spec.md` §7 のショートカットキー一式を`RadioCommands`
+      （メニューバーコマンド）として実装。個別キーの網羅的な実機確認は未実施
+- [x] アプリアイコン：オルカ（シャチ）のシルエット＋電波の意匠でオリジナル
+      作成（SVGソース`App/radioORCA/Resources/AppIcon.svg`、
+      `Assets.xcassets/AppIcon.appiconset`）。Griffin純正アプリのアイコン
+      意匠は参照・複製していない（`docs/app-feature-spec.md` §0の方針に
+      従い、動物モチーフのシルエットという表現形式のみが共通点で、
+      配色・輪郭・種そのもの（サメではなくシャチ）はオリジナル）
+- [ ] **この時点でMVPとして初回リリース候補**（β）— 上記の残課題（録音内容の
+      再検証、お気に入り操作の一連確認、個別ショートカットの確認）に加え、
+      Phase 6（署名・公証・dmg化）が未着手なため、まだ正式リリースはしない
+
+**重要な不具合と修正（2026-08-16）**：実装直後の実機確認で、チューニング・LED
+（HID経由）は動作するのに、**ライブ再生・録音の音声が完全な無音**になる
+問題が発生した（ノイズすら聞こえない）。`tccd`のログ
+（`log show --predicate '(subsystem == "com.apple.TCC") OR (process == "tccd")'`）
+を調査した結果、原因が判明：
+
+```text
+Prompting policy for hardened runtime; service: kTCCServiceMicrophone
+requires entitlement com.apple.security.device.audio-input but it is
+missing ... Policy disallows prompt ... access to kTCCServiceMicrophone denied
+```
+
+`project.yml`で`ENABLE_HARDENED_RUNTIME: YES`にしている一方、
+`com.apple.security.device.audio-input`エンタイトルメントを付与し忘れていた。
+**Hardened RuntimeはApp Sandboxと独立に、マイク（オーディオ入力）アクセスに
+このエンタイトルメントを要求する**。無いとmacOSは許可ダイアログすら出さず
+黙って`kTCCServiceMicrophone`を拒否するため、`AVAudioEngine.start()`自体は
+エラーを投げずに成功し、症状の切り分けが難しかった（HID系は無関係の経路
+なので正常に動作していた）。`project.yml`に`entitlements.properties`で
+このキーを追加し、`xcodegen generate`で再生成・再ビルド・`tccutil reset
+Microphone jp.co.bitz.radioORCA`後の実機確認でFM/AMのライブ音声が聞こえる
+ことを確認した。**非サンドボックスかつHardened Runtimeを使う構成
+（Phase 6の公証方針）ではこの点を見落としやすいので注意**。
 
 ### Phase 4. スケジュール録音
 - [ ] イベントモデル（繰り返し：Never/Daily/Weekly/Monthly/Yearly/Custom、終了条件：回数 or 日付）
@@ -161,11 +217,19 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 |---|---|
 | M1 | ✅ **達成（2026-08-16）** Phase 0-1完了：SwiftでLED点灯・選局がCLIから実機動作 |
 | M2 | ✅ **コア部分達成（2026-08-16）** Phase 2：ライブ再生・録音を実機確認。タイムシフトの実機聴感確認とPhase 1未了のUI組み込みはPhase 3待ち |
-| M3 | Phase 3完了：**MVPとして初回β公開（GitHub Releases）** |
+| M3 | ✅ **主要部分達成（2026-08-16）** Phase 3：チューニング・再生UIを実機のFM/AM受信で確認。残作業（録音内容の再検証等）が片付き次第、**MVPとして初回β公開（GitHub Releases）** |
 | M4 | Phase 4-5完了：スケジュール録音・EQ・設定画面が揃う |
 | M5 | Phase 6完了：署名・公証済みの正式1.0リリース（無料公開） |
 
 ## 検証ログ
+
+> **注記（2026-08-16）**：手動確認用CLIは当初 `radiosh-cli` という名前だった
+> （§9の出典クレジット対象である歴史的リファレンス実装 `radiosh.c` に
+> 由来）。「コードは複製しないが名前は似せてしまっていた」状態だったため、
+> 「radioSHARK」商標を避けて `radioORCA` に改名した経緯（本ドキュメント
+> 冒頭の表を参照）と整合させ、`radioorca-cli` に改称した。以下のログ中の
+> `radiosh-cli` という表記は、その時点で実際に使っていたコマンド名の
+> 記録としてそのまま残す。
 
 ### 2026-08-16：実機接続確認（1回目）
 

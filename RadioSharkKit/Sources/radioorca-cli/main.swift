@@ -1,15 +1,18 @@
 import Foundation
 import RadioSharkKit
 
-// radiosh-cli
+// radioorca-cli
 // Minimal CLI for manually verifying a real radioSHARK 2 device's LED and
 // tuner control. Exists to reach parity with the historical `rslight`/`radiosh`
 // command-line tools during development (see docs/implementation-plan.md,
-// Phase 1 / M1).
+// Phase 1 / M1). Named after this project's own "radioORCA" brand rather
+// than the historical `radiosh` reference tool, to keep a clean line
+// between "protocol facts we cite" and "our own original implementation"
+// (see docs/hardware-protocol.md §9).
 
 func printUsage() {
     let message = """
-    Usage: radiosh-cli [-b <0-127>] [-r <0-127>] [-f <MHz>] [-a <kHz>] [-w <seconds>]
+    Usage: radioorca-cli [-b <0-127>] [-r <0-127>] [-f <MHz>] [-a <kHz>] [-w <seconds>]
         -b    Set the blue LED brightness (0-127)
         -r    Set the red LED (recording indicator) brightness (0-127)
         -f    Switch to FM and tune to the given frequency (MHz)

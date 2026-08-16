@@ -6,13 +6,13 @@ let package = Package(
     platforms: [.macOS(.v13)],
     products: [
         .library(name: "RadioSharkKit", targets: ["RadioSharkKit"]),
-        .executable(name: "radiosh-cli", targets: ["radiosh-cli"]),
+        .executable(name: "radioorca-cli", targets: ["radioorca-cli"]),
         .executable(name: "radioaudio-cli", targets: ["radioaudio-cli"]),
     ],
     targets: [
         .target(name: "RadioSharkKit"),
         .executableTarget(
-            name: "radiosh-cli",
+            name: "radioorca-cli",
             dependencies: ["RadioSharkKit"]
         ),
         .executableTarget(
