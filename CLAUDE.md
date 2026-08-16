@@ -4,15 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクトの現状
 
-このリポジトリは現時点で**ドキュメントのみ**（ソースコードやXcode/SwiftPM
-プロジェクトはまだ存在しない）。目的は、最新macOSで動作しなくなった
-Griffin Technology製の生産終了デスクトップアプリ「radioSHARK 2」を、
-OSSとしてゼロから再実装すること。ビルド・lint・テストの対象は今のところ何もない。
+最新macOSで動作しなくなったGriffin Technology製の生産終了デスクトップアプリ
+「radioSHARK 2」を、OSSとしてゼロから再実装するプロジェクト。Phase 0-1
+（`docs/implementation-plan.md`参照）まで完了しており、`RadioSharkKit`
+パッケージによるHID制御（LED・チューニング）は実機で動作確認済み。
 
-Swiftプロジェクトを作成した段階（`docs/implementation-plan.md` のPhase 0参照）で、
-実際のビルド/テスト/lintコマンド（アプリターゲットは `xcodebuild`、
-`RadioSharkKit` パッケージは `swift test` を想定）をこのファイルに追記すること。
-その環境ができる前にコマンドを推測で書かないこと。
+### ビルド・テスト
+
+```sh
+# RadioSharkKit（コアロジック）のビルド・テスト
+cd RadioSharkKit
+swift build
+swift test                       # Swift Testingで実行
+
+# 実機に対する手動動作確認（radioSHARK 2が接続されている前提）
+swift run radiosh-cli -b 40      # 青色LED輝度40
+swift run radiosh-cli -f 80.0    # FM 80.0MHzにチューニング
+swift run radiosh-cli -h         # 使い方
+
+# アプリ本体（radioORCA.xcodeproj）
+# project.ymlを編集したら再生成すること
+xcodegen generate
+xcodebuild -project radioORCA.xcodeproj -scheme radioORCA build
+```
+
+単体テストを1件だけ実行する場合は `swift test --filter <TestName>` を使う
+（例: `swift test --filter FrequencyCodecTests`）。
+
+`radioORCA.xcodeproj` は `project.yml`（xcodegen）から生成される派生物。
+プロジェクト構成を変えるときは **`project.yml` を編集してから
+`xcodegen generate` で再生成**すること。`.xcodeproj` を直接手編集しない。
 
 ## 一次情報は docs/ にある
 
@@ -46,11 +67,33 @@ Swiftプロジェクトを作成した段階（`docs/implementation-plan.md` の
   デバイスとして認識される（実機検証済み：追加ドライバなしで
   `AVAudioEngine`/CoreAudioから通常のUSB入力として扱える）。
 - モジュール構成はアプリターゲット＋ローカルSwiftPMパッケージ
-  `RadioSharkKit`（デバイス検出・HID制御・周波数エンコード・オーディオエンジン）を想定。
-  プロトコル層を独立してユニットテストできるようにするため。テストは
-  Swift Testingを第一候補とする。
+  `RadioSharkKit`（デバイス検出・HID制御・周波数エンコード。オーディオエンジンは
+  Phase 2で追加予定）。プロトコル層を独立してユニットテストできるようにするため。
+  テストはSwift Testingを使う（実装済み）。
 - アプリ名は **radioORCA**。「radioSHARK」はGriffinの商標のため、
   本プロジェクトでは対応ハードウェア名としての説明的言及にとどめる。
+- **コード内のユーザー向け文字列（UIテキスト、CLI出力、エラーメッセージ）は
+  英語をベース言語とする**。日本語はXcodeの String Catalog
+  （`App/radioORCA/Localizable.xcstrings`）や `ja.lproj/InfoPlist.strings`
+  でローカライズとして提供する。`docs/`配下のドキュメント（日本語）とは
+  別の話なので混同しないこと。新しいUI文字列を追加したら、対応する
+  日本語訳を必ずString Catalogに追加する。
+
+## ディレクトリ構成
+
+- `RadioSharkKit/` — ローカルSwiftPMパッケージ（`Package.swift`）。
+  - `Sources/RadioSharkKit/` — `DeviceIdentity`（Vendor/Product ID）、
+    `FrequencyCodec`（周波数⇔バイト列変換）、`HIDReports`（レポート生成、
+    純粋関数でテストしやすい）、`HIDController`（`IOHIDManager`ラッパー、
+    実際にopen/setReportする）、`DeviceDiscovery`（接続/切断監視、まだ
+    アプリ本体には未接続）。
+  - `Sources/radiosh-cli/` — 実機での手動確認用CLI実行ファイル。
+  - `Tests/RadioSharkKitTests/` — Swift Testingによるユニットテスト
+    （`FrequencyCodec`/`HIDReports`の純粋関数のみを対象。実機は不要）。
+- `App/radioORCA/` — SwiftUIアプリのソース（`radioORCAApp.swift`,
+  `ContentView.swift`）。現状はPhase 0/1の配線確認用の最小プレースホルダーで、
+  本格的なUIはPhase 3（`docs/app-feature-spec.md`が仕様）。
+- `project.yml` — `radioORCA.xcodeproj` の生成元（xcodegen）。
 
 ## このリポジトリ特有の作法
 
