@@ -78,13 +78,37 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
   → **「コマンドラインで制御できる」state（ユーザーの既知の到達点）にSwift版として到達（M1達成）**
 - [ ] `DeviceDiscovery`をアプリ本体（SwiftUI）に組み込んで接続/切断UIに反映（Phase 3で対応）
 
-### Phase 2. オーディオ（ライブ再生・録音・タイムシフト）
-- [ ] `AVAudioEngine` でradioSHARKのUSBオーディオ入力デバイスを選択し、
-      inputNode → outputNode 直結でライブモニタリング再生
-- [ ] 録音：`AVAudioFile` でAAC(.m4a)書き出し、保存先 `~/Music/radioORCA/`
-- [ ] タイムシフト：循環バッファ（既定10分、設定可能）実装。
-      Rewind/Fast-Forward（可変速）、Skip Back/Ahead、Live復帰
-- [ ] デバイス未接続時／切断時のハンドリング（UI上でUSBアイコン点滅相当の表示）
+### Phase 2. オーディオ（ライブ再生・録音・タイムシフト） — ✅ コア実装・実機検証完了（2026-08-16）
+- [x] `AVAudioEngine` でradioSHARKのUSBオーディオ入力デバイスを選択し、
+      ライブモニタリング再生を実装。**ただし「inputNode → outputNode 直結」
+      という当初案は実機検証の結果不可能と判明**（radioSHARKがOutput
+      Channelsを持たない入力専用デバイスのため。詳細は
+      `hardware-protocol.md` §8）。キャプチャ専用エンジン（radioSHARK）と
+      再生専用エンジン（既定の出力デバイス）を分離し、`AVAudioPlayerNode`
+      経由でバッファを転送する構成に変更して実装（`AudioEngineController`）。
+      実機でAMにチューニングした状態でのライブ再生（スピーカーからの音声）
+      をユーザーが目視ならぬ耳で確認済み
+- [x] 録音：`AVAudioFile`でAAC(.m4a)書き出し、保存先`~/Music/radioORCA/`
+      （`RecordingSession`）。実機で5秒録音→`afinfo`で
+      2ch/48kHz/AAC/約5.0秒のファイルが生成されることを確認済み
+- [x] タイムシフト：循環バッファ（`RingBuffer`/`TimeshiftBuffer`、既定10分・
+      `capacityMinutes`で設定可能）と、Rewind/Fast-Forward（連打で段階的に
+      加速する可変速）/Skip Back・Ahead/Live復帰の状態機械
+      （`TimeshiftPlaybackController`）を実装。**いずれも純粋ロジックとして
+      ユニットテスト済み**（Swift Testing、19テスト追加）。ただし
+      `AudioEngineController`側の実際のスクラブ再生（`AVAudioPlayerNode`
+      へのスニペットスケジューリング）は実機での聴感確認は未実施
+      （操作用UIがまだ無いため。Phase 3でUIを繋いだ際に確認する）。
+      Rewindは「逆再生」ではなく「読み出し位置を過去へ移動しながら
+      短いスニペットを順再生」という簡易実装（詳細は
+      `TimeshiftPlaybackController`のドキュメントコメント参照。
+      プロダクトフィードバック次第で見直す前提の一次実装）
+- [x] デバイス未接続時／切断時のハンドリング：`AudioEngineController`が
+      `connectionState`/`onConnectionStateChange`を公開し、
+      `observe(_:DeviceDiscovery)`で接続/切断に連動して自動start/stopできる
+      ようにした。**UI上の表示（USBアイコン点滅相当）はPhase 3で対応**
+      （`DeviceDiscovery`のアプリ本体への組み込み自体もPhase 3待ち。
+      Phase 1の未了項目と合流）
 
 ### Phase 3. メインUI（MVP機能）
 - [ ] チューニングUI：Up/Down、AM/FM切替、スライダー、直接周波数入力、Tabシーク
@@ -131,7 +155,7 @@ radioORCA (SwiftUI App, non-sandboxed, Developer ID署名)
 | マイルストーン | 内容 |
 |---|---|
 | M1 | ✅ **達成（2026-08-16）** Phase 0-1完了：SwiftでLED点灯・選局がCLIから実機動作 |
-| M2 | Phase 2完了：ライブ再生・録音・タイムシフトが動作 |
+| M2 | ✅ **コア部分達成（2026-08-16）** Phase 2：ライブ再生・録音を実機確認。タイムシフトの実機聴感確認とPhase 1未了のUI組み込みはPhase 3待ち |
 | M3 | Phase 3完了：**MVPとして初回β公開（GitHub Releases）** |
 | M4 | Phase 4-5完了：スケジュール録音・EQ・設定画面が揃う |
 | M5 | Phase 6完了：署名・公証済みの正式1.0リリース（無料公開） |
@@ -209,3 +233,55 @@ Mac本体ポート直結でまず試す**運用を前提にする。
 
 これにより点灯・消灯コマンドの実装が完全に正しいことを実機で再確認できた。
 `-w`オプションは診断用として`radiosh-cli`に残してある。
+
+### 2026-08-16：Phase 2 実装・実機動作確認
+
+`RadioSharkKit`にオーディオ関連コア（`RingBuffer`/`TimeshiftBuffer`/
+`TimeshiftPlaybackController`/`AudioDeviceMatch`/`RecordingSession`/
+`AudioEngineController`）を実装し、手動確認用CLI `radioaudio-cli` を追加。
+純粋ロジック部分は`swift test`でユニットテスト（19件追加、既存6件と合わせて
+計25件全通過）。以下を実機で確認した。
+
+1. **1回目の実装（単一`AVAudioEngine`でinputNode/outputNodeを直結する案）は
+   実機で起動失敗**：`kAudioUnitErr_FormatNotSupported`
+   （"IsFormatSampleRateAndChannelCountValid(outputHWFormat)"）。
+   `system_profiler SPAudioDataType`で確認したところ、radioSHARK 2は
+   **Output Channelsを持たない入力専用オーディオデバイス**だった。macOSの
+   `AVAudioEngine`は`inputNode`/`outputNode`が同一のHAL I/Oユニットを
+   共有するため、`inputNode`をradioSHARKに向けると`outputNode`側も
+   出力チャンネル0のradioSHARKに巻き込まれてしまうことが原因（詳細は
+   `hardware-protocol.md` §8に追記済み）。
+2. **設計を「キャプチャ専用エンジン（radioSHARK）＋再生専用エンジン
+   （既定の出力デバイス）を分離し、キャプチャしたバッファを
+   `AVAudioPlayerNode`で転送する」構成に修正**（`AudioEngineController`）。
+   修正後、実機で`radioaudio-cli -m 3`によるライブモニタリングを試行。
+   → **チューニング前だったため無音**（想定通り。ラジオのRFフロントエンドが
+   何も受信していない状態）。
+3. `radiosh-cli -a 810 -b 100` でAM 810kHzにチューニングした状態で
+   `radioaudio-cli -m 5` を再実行したところ、**Macのスピーカーから実際に
+   音声（ノイズ/放送音）が聞こえることをユーザーが確認**。ライブ再生の
+   実装が正しく機能していることを実機で確認できた。
+4. `radioaudio-cli -r 5 -s TEST` で5秒間録音し、`~/Music/radioORCA/`配下に
+   生成された`.m4a`を`afinfo`で検証。**2ch/48kHz/AAC、estimated
+   duration 5.0秒**のファイルが正しく生成されることを確認（検証後、
+   テストファイルは削除済み）。
+5. `xcodebuild -project radioORCA.xcodeproj -scheme radioORCA build` も
+   成功（`NSMicrophoneUsageDescription`は`project.yml`に既に用意済みだった）。
+
+**未検証（Phase 3待ち）**：タイムシフト（Rewind/Fast Forward/Skip/Live復帰）
+の`AVAudioPlayerNode`スニペット再生は、操作用UIがまだ無いため実機での
+聴感確認ができていない。状態機械（`TimeshiftPlaybackController`）自体は
+純粋ロジックとしてユニットテスト済み。
+
+これにより **M2のコア部分（ライブ再生・録音）を実機で達成**。
+
+### 2026-08-16：バンドルID・Team ID・配布経路の会社情報反映
+
+当初`com.bitzgroup`で仮設定していたバンドルIDを、実際の配布主体である
+`jp.co.bitz`（自社ドメイン）に変更（`project.yml`の`bundleIdPrefix`と
+`PRODUCT_BUNDLE_IDENTIFIER`）。あわせて`DEVELOPMENT_TEAM`に自社のApple
+Developer Team ID（`XKY95WKF3J`）を設定（参考：社内の別リポジトリ
+`bitzcojp/backgammon`の`project.yml`と同じTeam ID）。Team IDはコード署名済み
+バイナリ自体から読み取れる非機密情報のため、publicリポジトリへの記載は
+問題ないと判断した。`xcodegen generate`で再生成し、`xcodebuild`でビルド
+成功を確認済み。

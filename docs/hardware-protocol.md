@@ -161,6 +161,20 @@ HIDレポートを送るだけでよい。デバイス側に範囲や刻みの�
   として実装する（`AVAudioEngine` の input node → 循環バッファ →
   output node / ファイル書き出し、という構成。詳細は
   `implementation-plan.md` の Phase 2 を参照）。
+- **radioSHARK 2はOutput Channelsを持たない入力専用のUSBオーディオデバイス**
+  （`system_profiler SPAudioDataType` で "Input Channels: 2" のみが報告され、
+  "Output Channels" 行が存在しないことを実機確認済み）。macOSの
+  `AVAudioEngine`は`inputNode`/`outputNode`が同一のHAL I/Oユニット（＝同一
+  デバイス）を共有する仕様のため、単一の`AVAudioEngine`の`inputNode`を
+  radioSHARKに向けると`outputNode`側も出力チャンネル0のradioSHARKに
+  巻き込まれてしまい、エンジン起動が
+  `kAudioUnitErr_FormatNotSupported`相当のエラーで失敗する（2026-08-16
+  実機で確認・切り分け済み）。**キャプチャ専用の`AVAudioEngine`
+  （inputNodeをradioSHARKに設定、出力は使わない）と、再生専用の
+  `AVAudioEngine`（既定の出力デバイスを使用、`AVAudioPlayerNode`で
+  キャプチャ済みバッファを再生）を分離する**ことで回避する。実装は
+  `RadioSharkKit/Sources/RadioSharkKit/AudioEngineController.swift`の
+  ドキュメントコメントを参照。
 
 ## 9. 参照した既存実装と出典
 
