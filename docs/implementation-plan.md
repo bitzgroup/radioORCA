@@ -11,6 +11,7 @@
 | 署名 | Developer ID Application証明書で署名 + `notarytool` で公証（Gatekeeperに引っかからないようにする） |
 | ライセンス | MIT（リポジトリに設定済み）。プロトコル知識の出典は `hardware-protocol.md` §9 にクレジット記載 |
 | アプリ名 | **radioORCA**（"radioSHARK"はGriffinの商標のため、対応ハードウェア名としての言及に留める） |
+| リポジトリ名 | **`bitzgroup/radioORCA`**（2026-08-16に`bitzgroup/radioSHARK`から改名済み。アプリ名と統一） |
 | 既存Xcodeプロジェクト | **参照しない**。`~/Documents/Development/Projects/radioORCA` の過去プロトタイプは白紙に戻し、本リポジトリ内に新規プロジェクトを作成する |
 | UIフレームワーク | SwiftUI + Swift Concurrency（async/await, actor）。Swift 6 language mode を第一候補とする |
 | デバイス制御API | **`IOHIDManager`**（現行の高レベルHID API）を採用。`rslight`/`radiosh` が使う古い `IOCFPlugIn` / `IOHIDDeviceInterface**` 方式は参照しない（プロトコル仕様＝バイト列の知識のみ流用） |
